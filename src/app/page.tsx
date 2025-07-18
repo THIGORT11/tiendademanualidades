@@ -1,8 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Facebook, Instagram, Search, Twitter } from "lucide-react";
+import { Facebook, Instagram, Twitter } from "lucide-react";
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/contact-form";
 import Image from "next/image";
 
 export const metadata: Metadata = {
@@ -78,15 +75,20 @@ export default function Home() {
     <>
       <HeroSection />
       <main>
-        <Section id="kits" title="Nuestros Kits DIY" className="bg-card">
-          <p>Explora nuestra colección curada de kits "Hazlo Tú Mismo", perfectos para principiantes y expertos.</p>
+        <Section id="section1" title="Sección 1" className="bg-card">
+          <p></p>
         </Section>
-        <Section id="materials" title="Materiales de Calidad Superior" className="bg-background">
-          <p>Desde pinturas hasta hilos, encuentra los mejores materiales para tus proyectos más ambiciosos.</p>
+        <Section id="section2" title="Sección 2" className="bg-background">
+          <p></p>
         </Section>
-        <Section id="contact" title="Contáctanos" className="bg-card">
-          <p className="mb-8">¿Tienes preguntas o necesitas ayuda? Estamos aquí para asistirte.</p>
-          <ContactForm />
+        <Section id="section3" title="Sección 3" className="bg-card">
+          <p></p>
+        </Section>
+        <Section id="section4" title="Sección 4" className="bg-background">
+          <p></p>
+        </Section>
+        <Section id="section5" title="Sección 5" className="bg-card">
+          <p></p>
         </Section>
       </main>
       <Footer />
