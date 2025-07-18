@@ -1,4 +1,4 @@
-
+// src/components/product-card.tsx
 "use client";
 
 import Image from "next/image";
@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { ShoppingCart, Edit } from "lucide-react";
+import { useCart } from "@/context/cart-context";
 
 export interface Product {
   name: string;
@@ -29,8 +30,9 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const [customizationValue, setCustomizationValue] = useState('');
-  const [isCustomizing, setIsCustomizing] = useState(!!product.customization);
+  const [isCustomizing, setIsCustomizing] = useState(!product.customization);
   const { toast } = useToast();
+  const { addToCart } = useCart();
 
   const handleAddToCart = () => {
     if (product.customization && !customizationValue) {
@@ -42,7 +44,7 @@ export function ProductCard({ product }: ProductCardProps) {
       return;
     }
     
-    setIsCustomizing(false);
+    addToCart(product, customizationValue);
     
     toast({
       title: "Producto añadido",
@@ -51,13 +53,16 @@ export function ProductCard({ product }: ProductCardProps) {
     
     if (product.customization) {
         setCustomizationValue('');
-        setTimeout(() => setIsCustomizing(true), 100);
     }
   };
 
   const handleCustomizeClick = () => {
     setIsCustomizing(true);
   };
+  
+  const showCustomization = product.customization && isCustomizing;
+  const showAddToCart = !product.customization || isCustomizing;
+  const showPersonalizeButton = product.customization && !isCustomizing;
 
   return (
     <Card className="flex flex-col overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-card">
@@ -76,7 +81,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       </CardHeader>
       <CardContent className="flex-grow p-4">
-        {isCustomizing && product.customization?.type === 'text' && (
+        {showCustomization && product.customization?.type === 'text' && (
           <div className="space-y-2 mb-4">
             <Label htmlFor={`custom-${product.name}`}>{product.customization.label}</Label>
             <Input 
@@ -88,7 +93,7 @@ export function ProductCard({ product }: ProductCardProps) {
             />
           </div>
         )}
-        {isCustomizing && product.customization?.type === 'radio' && (
+        {showCustomization && product.customization?.type === 'radio' && (
           <div className="space-y-3 mb-4">
             <Label>{product.customization.label}</Label>
             <RadioGroup onValueChange={setCustomizationValue} value={customizationValue}>
@@ -102,19 +107,20 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
       </CardContent>
-      <CardFooter className="p-4 flex justify-between items-center bg-muted/30">
+      <CardFooter className="p-4 flex justify-between items-center bg-muted/30 mt-auto">
         <p className="text-2xl font-bold text-primary">{product.price}</p>
-        {!product.customization || isCustomizing ? (
+        {showAddToCart ? (
            <Button onClick={handleAddToCart}>
              <ShoppingCart className="mr-2 h-4 w-4" />
              Añadir al carrito
            </Button>
-        ) : (
+        ) : null}
+        {showPersonalizeButton ? (
           <Button onClick={handleCustomizeClick}>
             <Edit className="mr-2 h-4 w-4" />
             Personalizar
           </Button>
-        )}
+        ) : null}
       </CardFooter>
     </Card>
   );

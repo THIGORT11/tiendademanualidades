@@ -1,6 +1,9 @@
+// src/app/layout.tsx
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import { CartProvider } from '@/context/cart-context';
+import { CartSheet } from '@/components/cart-sheet';
 
 export const metadata: Metadata = {
   title: 'CraftLab - Tienda de Manualidades',
@@ -22,8 +25,11 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased overflow-x-hidden">
-        {children}
-        <Toaster />
+        <CartProvider>
+          {children}
+          <CartSheet />
+          <Toaster />
+        </CartProvider>
       </body>
     </html>
   );

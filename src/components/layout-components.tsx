@@ -1,25 +1,48 @@
-import { Facebook, Instagram, Twitter } from "lucide-react";
+// src/components/layout-components.tsx
+"use client";
+
+import { Facebook, Instagram, Twitter, Search, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { useCart } from "@/context/cart-context";
 
-export const Header = () => (
-  <header className="py-4 px-4 bg-background border-b">
-    <div className="max-w-4xl mx-auto flex justify-center">
-      <Link href="/">
-        <Image 
-          src="https://i.imgur.com/CWsII5N.png" 
-          alt="Logo de la Tienda de Manualidades" 
-          width={250} 
-          height={250}
-          priority
-        />
-      </Link>
-    </div>
-  </header>
-);
+export const Header = () => {
+    const { setIsCartOpen, cartItems } = useCart();
+    
+    return (
+      <header className="py-4 px-4 bg-background border-b sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto flex justify-between items-center">
+          <Link href="/">
+            <Image 
+              src="https://i.imgur.com/CWsII5N.png" 
+              alt="Logo de la Tienda de Manualidades" 
+              width={250} 
+              height={250}
+              priority
+              className="w-48 md:w-64"
+            />
+          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            onClick={() => setIsCartOpen(true)}
+          >
+            <ShoppingCart className="h-6 w-6" />
+            {cartItems.length > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                {cartItems.length}
+              </span>
+            )}
+            <span className="sr-only">Abrir carrito</span>
+          </Button>
+        </div>
+      </header>
+    );
+};
+
 
 export const Navigation = () => (
     <div className="max-w-4xl mx-auto z-10 flex flex-col items-center">

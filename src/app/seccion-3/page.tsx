@@ -1,3 +1,4 @@
+// src/app/seccion-3/page.tsx
 import { Header, Footer, Navigation } from "@/components/layout-components";
 import { ProductCard, Product } from "@/components/product-card";
 
