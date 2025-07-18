@@ -15,8 +15,8 @@ import { Label } from "@/components/ui/label";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import { processCheckout, type FormState } from "@/app/actions";
-import { useEffect, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useEffect, useState, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { Loader2 } from "lucide-react";
 
 interface CheckoutDialogProps {
@@ -48,7 +48,7 @@ export function CheckoutDialog({ isOpen, onOpenChange }: CheckoutDialogProps) {
   const { toast } = useToast();
   
   const processCheckoutWithItems = processCheckout.bind(null, cartItems, total);
-  const [state, formAction] = useFormState(processCheckoutWithItems, initialState);
+  const [state, formAction] = useActionState(processCheckoutWithItems, initialState);
   const [formKey, setFormKey] = useState(Date.now());
 
 
