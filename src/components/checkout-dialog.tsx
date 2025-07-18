@@ -51,9 +51,11 @@ export function CheckoutDialog({ isOpen, onOpenChange }: CheckoutDialogProps) {
   const processCheckoutWithItems = processCheckout.bind(null, cartItems, total);
   const [state, formAction] = useActionState(processCheckoutWithItems, initialState);
   
-  const handleCloseDialog = () => {
-    formRef.current?.reset();
-    onOpenChange(false);
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      formRef.current?.reset();
+    }
+    onOpenChange(open);
   }
 
   useEffect(() => {
@@ -65,13 +67,13 @@ export function CheckoutDialog({ isOpen, onOpenChange }: CheckoutDialogProps) {
       });
       if (state.success) {
         clearCart();
-        handleCloseDialog();
+        onOpenChange(false);
       }
     }
-  }, [state, toast, clearCart]);
+  }, [state, toast, clearCart, onOpenChange]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Finalizar Compra</DialogTitle>
