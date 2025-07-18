@@ -59,6 +59,7 @@ const checkoutSchema = z.object({
 export async function processCheckout(
   cartItems: CartItem[],
   total: number,
+  prevState: FormState,
   formData: FormData
 ): Promise<FormState> {
 
