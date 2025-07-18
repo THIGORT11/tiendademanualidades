@@ -34,6 +34,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const clearCart = () => {
     setCartItems([]);
+    setIsCartOpen(false);
   };
 
   const total = cartItems.reduce((sum, item) => {

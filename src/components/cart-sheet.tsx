@@ -7,11 +7,20 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/com
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { Trash2 } from "lucide-react";
+import { CheckoutDialog } from "./checkout-dialog";
+import { useState } from "react";
 
 export function CartSheet() {
   const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, total } = useCart();
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  
+  const handleCheckout = () => {
+    setIsCartOpen(false);
+    setIsCheckoutOpen(true);
+  }
 
   return (
+    <>
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
       <SheetContent className="flex flex-col">
         <SheetHeader>
@@ -57,7 +66,7 @@ export function CartSheet() {
                         <span>Total:</span>
                         <span>{total.toFixed(2)} €</span>
                     </div>
-                    <Button size="lg" className="w-full mt-4">
+                    <Button size="lg" className="w-full mt-4" onClick={handleCheckout}>
                         Finalizar Compra
                     </Button>
                 </div>
@@ -71,5 +80,7 @@ export function CartSheet() {
         )}
       </SheetContent>
     </Sheet>
+    <CheckoutDialog isOpen={isCheckoutOpen} onOpenChange={setIsCheckoutOpen} />
+    </>
   );
 }
