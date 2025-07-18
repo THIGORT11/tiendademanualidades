@@ -32,32 +32,6 @@ const HeroSection = () => (
         className="mb-8"
         priority
       />
-      <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto">
-        Descubre materiales de manualidades de calidad premium y kits inspiradores para transformar tus ideas en realidad.
-      </p>
-
-      <div className="mb-12 w-full max-w-md">
-        <div className="relative">
-          <Input 
-            type="text" 
-            placeholder="Buscar productos (ej. 'hilos de oro')"
-            className="w-full py-3 pl-12 pr-4 h-12 rounded-xl border-border bg-card text-foreground placeholder-muted-foreground focus:ring-ring focus-visible:ring-2"
-          />
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-        </div>
-      </div>
-
-      <div className="flex flex-wrap justify-center gap-4">
-        <Button asChild size="lg" variant="outline" className="rounded-full px-8 py-3 text-lg font-semibold transition-transform hover:-translate-y-0.5 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-          <a href="#kits">Kits DIY</a>
-        </Button>
-        <Button asChild size="lg" variant="outline" className="rounded-full px-8 py-3 text-lg font-semibold transition-transform hover:-translate-y-0.5 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-          <a href="#materials">Materiales</a>
-        </Button>
-        <Button asChild size="lg" variant="outline" className="rounded-full px-8 py-3 text-lg font-semibold transition-transform hover:-translate-y-0.5 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-          <a href="#contact">Contacto</a>
-        </Button>
-      </div>
     </div>
   </header>
 );
@@ -72,9 +46,18 @@ const Section = ({ id, title, children, className }: { id: string; title: string
 );
 
 const Footer = () => (
-    <footer className="bg-card py-12 px-4 text-center text-muted-foreground border-t">
-        <div className="max-w-4xl mx-auto">
-            <p className="mb-4">&copy; 2025 Tienda de Manualidades. Todos los derechos reservados.</p>
+    <footer className="bg-card py-8 px-4 text-muted-foreground border-t">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+                <Image 
+                  src="https://i.imgur.com/CWsII5N.png" 
+                  alt="Logo de la Tienda de Manualidades en el pie de página" 
+                  width={50} 
+                  height={50}
+                  className="rounded-full"
+                />
+                <p className="text-sm">&copy; 2025 Tienda de Manualidades. <br /> Todos los derechos reservados.</p>
+            </div>
             <div className="flex justify-center space-x-6">
                 <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-300" aria-label="Facebook">
                     <Facebook />
