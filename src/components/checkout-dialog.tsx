@@ -64,7 +64,7 @@ export function CheckoutDialog({ isOpen, onOpenChange }: CheckoutDialogProps) {
         formRef.current?.reset();
       }
     }
-  }, [state, toast, clearCart, onOpenChange]);
+  }, [state.message, state.success, toast, clearCart, onOpenChange]);
   
   const handleOpenChange = (open: boolean) => {
     if (!open) {
