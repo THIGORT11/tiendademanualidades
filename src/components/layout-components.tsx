@@ -12,7 +12,7 @@ export const Header = () => {
     const { setIsCartOpen, cartItems } = useCart();
     
     return (
-      <header className="py-4 px-4 bg-background border-b sticky top-0 z-50">
+      <header className="py-4 px-4 bg-background border-b">
         <div className="max-w-4xl mx-auto flex justify-center items-center relative">
           <Link href="/">
             <Image 

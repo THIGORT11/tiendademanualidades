@@ -3,6 +3,8 @@
 
 import { z } from "zod";
 import type { CartItem } from '@/context/cart-context';
+import nodemailer from 'nodemailer';
+import 'dotenv/config';
 
 const contactSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
@@ -78,36 +80,62 @@ export async function processCheckout(
 
   const { name, email } = validatedFields.data;
   const orderId = `order_${Date.now()}`;
-  const storeEmail = "tiendademanualidades25@gmail.com";
+  const storeEmail = process.env.EMAIL_TO;
+  const fromEmail = process.env.EMAIL_SERVER_USER;
+
+  if (!storeEmail || !fromEmail || !process.env.EMAIL_SERVER_PASSWORD) {
+    console.error("Email environment variables are not set.");
+    return {
+        success: false,
+        message: "Error de configuración del servidor. No se pudo procesar el pedido.",
+    };
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: fromEmail,
+      pass: process.env.EMAIL_SERVER_PASSWORD,
+    },
+  });
 
   try {
-    // --- SIMULACIÓN DE ENVÍO DE CORREO ---
-    // En una aplicación real, aquí iría la lógica para enviar correos.
-    
-    // 1. Preparar contenido del correo
     const orderDetailsText = cartItems.map(item => 
       `- ${item.name} (${item.price}) ${item.customizationValue ? `[Personalización: ${item.customizationValue}]` : ''}`
     ).join('\n');
+    
+    const emailHtmlToStore = `
+      <h1>Nuevo Pedido #${orderId}</h1>
+      <p>Has recibido un nuevo pedido de <strong>${name}</strong> (${email}).</p>
+      <h2>Detalles del pedido:</h2>
+      <pre>${orderDetailsText}</pre>
+      <h3>Total: ${total.toFixed(2)} €</h3>
+    `;
 
-    const emailToStore = {
+    const emailHtmlToCustomer = `
+      <h1>¡Gracias por tu pedido, ${name}!</h1>
+      <p>Hemos recibido tu pedido #${orderId} y ya lo estamos preparando.</p>
+      <h2>Resumen de tu compra:</h2>
+      <pre>${orderDetailsText}</pre>
+      <h3>Total: ${total.toFixed(2)} €</h3>
+      <p>Nos pondremos en contacto contigo pronto para los detalles del envío.</p>
+    `;
+
+    // Send mail to the store
+    await transporter.sendMail({
+      from: `Tienda de Manualidades <${fromEmail}>`,
       to: storeEmail,
       subject: `Nuevo Pedido #${orderId}`,
-      body: `Has recibido un nuevo pedido de ${name} (${email}).\n\nDetalles del pedido:\n${orderDetailsText}\n\nTotal: ${total.toFixed(2)} €`
-    };
+      html: emailHtmlToStore,
+    });
 
-    const emailToCustomer = {
+    // Send confirmation to the customer
+    await transporter.sendMail({
+      from: `Tienda de Manualidades <${fromEmail}>`,
       to: email,
-      subject: `Confirmación de tu pedido #${orderId} en Tienda de Manualidades`,
-      body: `¡Gracias por tu compra, ${name}!\n\nHemos recibido tu pedido.\n\nResumen:\n${orderDetailsText}\n\nTotal: ${total.toFixed(2)} €\n\nNos pondremos en contacto contigo pronto para los detalles del envío.`
-    };
-
-    // 2. Mostrar en consola (simulación)
-    console.log("--- CORREO PARA LA TIENDA ---");
-    console.log(emailToStore);
-    console.log("-----------------------------");
-    console.log("--- CORREO PARA EL CLIENTE ---");
-    console.log(emailToCustomer);
-    console.log("------------------------------");
+      subject: `Confirmación de tu pedido #${orderId}`,
+      html: emailHtmlToCustomer,
+    });
     
     return {
       success: true,
@@ -115,7 +143,7 @@ export async function processCheckout(
     };
 
   } catch (error) {
-    console.error("Error procesando el pago:", error);
+    console.error("Error procesando el pago y enviando correos:", error);
     return {
       success: false,
       message: "Hubo un error al procesar tu pedido. Por favor, inténtalo de nuevo.",
