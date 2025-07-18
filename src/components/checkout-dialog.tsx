@@ -15,8 +15,8 @@ import { Label } from "@/components/ui/label";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import { processCheckout, type FormState } from "@/app/actions";
-import { useEffect, useRef } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useEffect, useRef, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { Loader2 } from "lucide-react";
 
 interface CheckoutDialogProps {
@@ -50,7 +50,7 @@ export function CheckoutDialog({ isOpen, onOpenChange }: CheckoutDialogProps) {
 
   const processCheckoutWithItems = processCheckout.bind(null, cartItems, total);
 
-  const [state, formAction] = useFormState(processCheckoutWithItems, initialState);
+  const [state, formAction] = useActionState(processCheckoutWithItems, initialState);
   
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -71,7 +71,7 @@ export function CheckoutDialog({ isOpen, onOpenChange }: CheckoutDialogProps) {
         onOpenChange(false);
       }
     }
-  }, [state, toast, clearCart, onOpenChange]);
+  }, [state.message, state.success, toast, clearCart, onOpenChange]);
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
