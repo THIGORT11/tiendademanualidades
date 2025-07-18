@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/hooks/use-toast";
 import { processCheckout, type FormState } from "@/app/actions";
-import { useEffect, useState, useActionState, useRef } from "react";
+import { useEffect, useActionState, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { Loader2 } from "lucide-react";
 
@@ -46,12 +46,10 @@ function SubmitButton() {
 export function CheckoutDialog({ isOpen, onOpenChange }: CheckoutDialogProps) {
   const { cartItems, total, clearCart } = useCart();
   const { toast } = useToast();
-  
-  const processCheckoutWithItems = processCheckout.bind(null, cartItems, total);
-  const [state, formAction, isPending] = useActionState(processCheckoutWithItems, initialState);
-  const [formKey, setFormKey] = useState(Date.now());
   const formRef = useRef<HTMLFormElement>(null);
 
+  const processCheckoutWithItems = processCheckout.bind(null, cartItems, total);
+  const [state, formAction] = useActionState(processCheckoutWithItems, initialState);
 
   useEffect(() => {
     if (state.message) {
@@ -63,16 +61,14 @@ export function CheckoutDialog({ isOpen, onOpenChange }: CheckoutDialogProps) {
       if (state.success) {
         clearCart();
         onOpenChange(false);
-        setFormKey(Date.now()); // Reset form by changing key
-        formRef.current?.reset(); // Explicitly reset form fields
+        formRef.current?.reset();
       }
     }
   }, [state, toast, clearCart, onOpenChange]);
   
   const handleOpenChange = (open: boolean) => {
     if (!open) {
-      setFormKey(Date.now()); // Reset form when closing
-       formRef.current?.reset();
+      formRef.current?.reset();
     }
     onOpenChange(open);
   }
@@ -86,7 +82,7 @@ export function CheckoutDialog({ isOpen, onOpenChange }: CheckoutDialogProps) {
             Introduce tus datos para completar el pedido. Te enviaremos una confirmación por correo electrónico.
           </DialogDescription>
         </DialogHeader>
-        <form key={formKey} action={formAction} ref={formRef} className="space-y-4">
+        <form action={formAction} ref={formRef} className="space-y-4">
             <div className="space-y-2">
                 <Label htmlFor="name">Nombre Completo</Label>
                 <Input id="name" name="name" placeholder="Tu nombre" required />
