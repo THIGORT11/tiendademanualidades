@@ -1,6 +1,8 @@
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Facebook, Instagram, Search, Twitter } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export const metadata: Metadata = {
   title: "Tienda de Manualidades | Calidad y Creatividad",
@@ -19,19 +21,36 @@ export const metadata: Metadata = {
 };
 
 const HeroSection = () => (
-  <header className="min-h-screen flex items-center justify-center text-center px-4 py-16 bg-background relative">
-    <div className="max-w-4xl mx-auto z-10 flex flex-col items-center">
-      <Image 
-        src="https://i.imgur.com/CWsII5N.png" 
-        alt="Logo de la Tienda de Manualidades" 
-        width={400} 
-        height={400} 
-        className="mb-8"
-        priority
-      />
-    </div>
-  </header>
-);
+    <header className="min-h-screen flex flex-col items-center justify-center text-center px-4 py-16 bg-background relative">
+      <div className="max-w-4xl mx-auto z-10 flex flex-col items-center">
+        <Image 
+          src="https://i.imgur.com/CWsII5N.png" 
+          alt="Logo de la Tienda de Manualidades" 
+          width={400} 
+          height={400} 
+          className="mb-8"
+          priority
+        />
+        <h1 className="text-5xl font-bold text-primary mb-4 font-headline">Tu Laboratorio Creativo</h1>
+        <p className="text-xl text-muted-foreground mb-8 max-w-2xl">Descubre un universo de posibilidades con nuestra selección exclusiva de materiales y kits para manualidades.</p>
+        
+        <div className="flex w-full max-w-xl mx-auto items-center space-x-2 border border-primary rounded-full p-2 mb-8 bg-card shadow-lg">
+          <Input type="search" placeholder="Buscar hilos, pinturas, kits..." className="border-0 bg-transparent text-base focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow" />
+          <Button type="submit" size="icon" className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
+            <Search className="h-5 w-5" />
+          </Button>
+        </div>
+        
+        <nav className="flex flex-wrap justify-center gap-4">
+          <Button variant="link" asChild><a href="#diy-kits">DIY Kits</a></Button>
+          <Button variant="link" asChild><a href="#materials">Materiales</a></Button>
+          <Button variant="link" asChild><a href="#inspiration">Inspiración</a></Button>
+          <Button variant="link" asChild><a href="#new-products">Novedades</a></Button>
+          <Button variant="link" asChild><a href="#contact">Contacto</a></Button>
+        </nav>
+      </div>
+    </header>
+  );
 
 const Section = ({ id, title, children, className }: { id: string; title: string; children: React.ReactNode; className?: string }) => (
   <section id={id} className={`py-20 px-4 text-center ${className}`}>
@@ -75,19 +94,19 @@ export default function Home() {
     <>
       <HeroSection />
       <main>
-        <Section id="section1" title="Sección 1" className="bg-card">
+        <Section id="diy-kits" title="DIY Kits" className="bg-card">
           <p></p>
         </Section>
-        <Section id="section2" title="Sección 2" className="bg-background">
+        <Section id="materials" title="Materiales" className="bg-background">
           <p></p>
         </Section>
-        <Section id="section3" title="Sección 3" className="bg-card">
+        <Section id="inspiration" title="Inspiración" className="bg-card">
           <p></p>
         </Section>
-        <Section id="section4" title="Sección 4" className="bg-background">
+        <Section id="new-products" title="Novedades" className="bg-background">
           <p></p>
         </Section>
-        <Section id="section5" title="Sección 5" className="bg-card">
+        <Section id="contact" title="Contacto" className="bg-card">
           <p></p>
         </Section>
       </main>
