@@ -30,7 +30,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const [customizationValue, setCustomizationValue] = useState('');
-  const [isCustomizing, setIsCustomizing] = useState(!product.customization);
+  const [isCustomizing, setIsCustomizing] = useState(false);
   const { toast } = useToast();
   const { addToCart } = useCart();
 
@@ -53,6 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
     
     if (product.customization) {
         setCustomizationValue('');
+        setIsCustomizing(false);
     }
   };
 
