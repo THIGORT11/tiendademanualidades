@@ -13,21 +13,21 @@ export const Header = () => {
     
     return (
       <header className="py-4 px-4 bg-background border-b sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
+        <div className="max-w-4xl mx-auto flex justify-center items-center relative">
           <Link href="/">
             <Image 
               src="https://i.imgur.com/CWsII5N.png" 
               alt="Logo de la Tienda de Manualidades" 
-              width={250} 
-              height={250}
+              width={350} 
+              height={350}
               priority
-              className="w-48 md:w-64"
+              className="w-64 md:w-80"
             />
           </Link>
           <Button
             variant="ghost"
             size="icon"
-            className="relative"
+            className="relative absolute right-0"
             onClick={() => setIsCartOpen(true)}
           >
             <ShoppingCart className="h-6 w-6" />
