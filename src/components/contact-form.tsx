@@ -23,7 +23,8 @@ function SubmitButton() {
       aria-disabled={pending} 
       disabled={pending}
       size="lg"
-      className="w-full md:w-auto rounded-full px-8 py-3 text-lg font-semibold transition-transform hover:-translate-y-0.5"
+      variant="outline"
+      className="w-full md:w-auto rounded-full px-8 py-3 text-lg font-semibold transition-transform hover:-translate-y-0.5 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
     >
       {pending ? "Enviando..." : "Enviar Mensaje"}
     </Button>
