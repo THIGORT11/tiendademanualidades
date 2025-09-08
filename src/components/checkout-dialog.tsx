@@ -71,7 +71,8 @@ export function CheckoutDialog({ isOpen, onOpenChange }: CheckoutDialogProps) {
         onOpenChange(false);
       }
     }
-  }, [state, toast, clearCart, onOpenChange]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
