@@ -71,7 +71,7 @@ export function CheckoutDialog({ isOpen, onOpenChange }: CheckoutDialogProps) {
         onOpenChange(false);
       }
     }
-  }, [state.message, state.success, toast, clearCart, onOpenChange]);
+  }, [state, toast, clearCart, onOpenChange]);
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
