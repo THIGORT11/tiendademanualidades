@@ -1,3 +1,4 @@
+
 import { Header, Footer, Navigation } from "@/components/layout-components";
 import type { Metadata } from "next";
 
@@ -7,13 +8,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Tienda de Manualidades Premium",
     description: "Descubre un mundo de creatividad con nuestra exclusiva selección de materiales y kits de manualidades. Calidad premium para tus proyectos.",
-    images: [{ url: "https://i.imgur.com/CWsII5N.png" }],
+    images: [{ url: "https://i.imgur.com/WaDyt2D.png" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Tienda de Manualidades Premium",
     description: "Descubre un mundo de creatividad con nuestra exclusiva selección de materiales y kits de manualidades. Calidad premium para tus proyectos.",
-    images: ["https://i.imgur.com/CWsII5N.png"],
+    images: ["https://i.imgur.com/WaDyt2D.png"],
   },
 };
 

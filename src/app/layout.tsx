@@ -1,3 +1,4 @@
+
 // src/app/layout.tsx
 import type { Metadata } from 'next';
 import './globals.css';
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   description: 'Descubre un mundo de creatividad con nuestra exclusiva selección de materiales y kits de manualidades. Calidad premium para tus proyectos.',
   keywords: "manualidades, tienda de manualidades, arte, creatividad, diy, materiales de arte, kits de manualidades, premium, exclusivo",
   icons: {
-    icon: 'https://i.imgur.com/UKokrUq.png',
+    icon: 'https://i.imgur.com/WaDyt2D.png',
   },
 };
 
