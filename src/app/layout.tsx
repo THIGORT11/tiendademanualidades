@@ -23,6 +23,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+         <link rel="icon" href="https://i.imgur.com/UKokrUq.png" />
+        <link rel="apple-touch-icon" href="https://i.imgur.com/UKokrUq.png" />
+        <meta name="msapplication-TileColor" content="#070b18" />
+        <meta name="theme-color" content="#070b18" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
