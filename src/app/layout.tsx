@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: 'CraftLab - Tienda de Manualidades',
   description: 'Descubre un mundo de creatividad con nuestra exclusiva selección de materiales y kits de manualidades. Calidad premium para tus proyectos.',
   keywords: "manualidades, tienda de manualidades, arte, creatividad, diy, materiales de arte, kits de manualidades, premium, exclusivo",
+  icons: {
+    icon: 'https://i.imgur.com/UKokrUq.png',
+  },
 };
 
 export default function RootLayout({
