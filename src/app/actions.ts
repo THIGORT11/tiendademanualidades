@@ -53,6 +53,8 @@ export async function submitContactForm(
   }
 }
 
+import { generateEmailHtml, generateOrderRows } from '@/lib/email-template';
+
 const checkoutSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
   email: z.string().email("Por favor, introduce un correo electrónico válido."),
@@ -80,14 +82,21 @@ export async function processCheckout(
 
   const { name, email } = validatedFields.data;
   const orderId = `order_${Date.now()}`;
-  const storeEmail = process.env.EMAIL_TO;
-  const fromEmail = process.env.EMAIL_SERVER_USER;
 
-  if (!storeEmail || !fromEmail || !process.env.EMAIL_SERVER_PASSWORD) {
-    console.error("Email environment variables are not set.");
+  // Use environment variables but allow fallbacks for the TO address if needed, 
+  // though credentials MUST be present.
+  const storeEmail = process.env.EMAIL_TO || 'tiendademanualidades25@gmail.com';
+  const fromEmail = process.env.EMAIL_SERVER_USER;
+  const emailPassword = process.env.EMAIL_SERVER_PASSWORD;
+
+  if (!fromEmail || !emailPassword) {
+    console.error("CRITICAL ERROR: Email server credentials are missing.");
+    console.error("EMAIL_SERVER_USER:", fromEmail ? "Set" : "Missing");
+    console.error("EMAIL_SERVER_PASSWORD:", emailPassword ? "Set" : "Missing");
+
     return {
-        success: false,
-        message: "Error de configuración del servidor. No se pudo procesar el pedido.",
+      success: false,
+      message: "Error de configuración del servidor (Credenciales de correo faltantes). Por favor contacta al administrador.",
     };
   }
 
@@ -95,58 +104,17 @@ export async function processCheckout(
     service: 'gmail',
     auth: {
       user: fromEmail,
-      pass: process.env.EMAIL_SERVER_PASSWORD,
+      pass: emailPassword,
     },
   });
 
   try {
-    const orderDetailsHtml = cartItems.map(item => 
-      `<tr>
-        <td style="padding: 10px; border-bottom: 1px solid #dddddd;">${item.name} ${item.customizationValue ? `(${item.customizationValue})` : ''}</td>
-        <td style="padding: 10px; border-bottom: 1px solid #dddddd; text-align: right;">${item.price}</td>
-      </tr>`
-    ).join('');
-
-    const emailTemplate = (title: string, content: string) => `
-      <!DOCTYPE html>
-      <html>
-      <head>
-          <meta charset="UTF-8">
-          <title>${title}</title>
-          <style>
-              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; margin: 0; padding: 0; background-color: #f4f4f4; }
-              .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-              .header { background-color: #2a2a2a; padding: 20px; text-align: center; }
-              .header img { max-width: 250px; }
-              .content { padding: 30px; color: #333333; line-height: 1.6; }
-              .content h1 { color: #f2b736; font-size: 24px; margin-top: 0; }
-              .content p { margin-bottom: 20px; }
-              .order-details { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-              .order-details th { background-color: #f9f9f9; padding: 10px; text-align: left; border-bottom: 2px solid #eeeeee; }
-              .total { text-align: right; font-size: 18px; font-weight: bold; color: #f2b736; margin-top: 20px; }
-              .footer { background-color: #fafafa; padding: 20px; text-align: center; font-size: 12px; color: #777777; border-top: 1px solid #dddddd; }
-          </style>
-      </head>
-      <body>
-          <div class="container">
-              <div class="header">
-                  <img src="https://i.imgur.com/CWsII5N.png" alt="Tienda de Manualidades Logo">
-              </div>
-              <div class="content">
-                  ${content}
-              </div>
-              <div class="footer">
-                  &copy; ${new Date().getFullYear()} Tienda de Manualidades. Todos los derechos reservados.
-              </div>
-          </div>
-      </body>
-      </html>
-    `;
+    const orderRowsHtml = generateOrderRows(cartItems);
 
     const storeContent = `
-        <h1>Nuevo Pedido #${orderId}</h1>
-        <p>Has recibido un nuevo pedido de <strong>${name}</strong> (${email}).</p>
-        <h2>Detalles del pedido:</h2>
+        <h1>Nuevo Pedido <span class="highlight">#${orderId}</span></h1>
+        <p>Has recibido un nuevo pedido de <strong>${name}</strong> (<a href="mailto:${email}" style="color: #f2b736;">${email}</a>).</p>
+        
         <table class="order-details">
             <thead>
                 <tr>
@@ -155,15 +123,21 @@ export async function processCheckout(
                 </tr>
             </thead>
             <tbody>
-                ${orderDetailsHtml}
+                ${orderRowsHtml}
             </tbody>
         </table>
-        <div class="total">Total: ${total.toFixed(2)} €</div>
+        
+        <div class="total-section">
+            <span class="total-label">Total del Pedido</span>
+            <div class="total-amount">${total.toFixed(2)} €</div>
+        </div>
     `;
 
     const customerContent = `
-        <h1>¡Gracias por tu pedido, ${name}!</h1>
-        <p>Hemos recibido tu pedido #${orderId} y ya lo estamos preparando. Aquí tienes un resumen de tu compra:</p>
+        <h1>¡Gracias por tu pedido!</h1>
+        <p>Hola <span class="highlight">${name}</span>,</p>
+        <p>Hemos recibido tu pedido <strong>#${orderId}</strong> correctamente. Estamos preparando todo con mucho cuidado.</p>
+        
         <table class="order-details">
             <thead>
                 <tr>
@@ -172,39 +146,46 @@ export async function processCheckout(
                 </tr>
             </thead>
             <tbody>
-                ${orderDetailsHtml}
+                ${orderRowsHtml}
             </tbody>
         </table>
-        <div class="total">Total: ${total.toFixed(2)} €</div>
-        <p>Nos pondremos en contacto contigo pronto para los detalles del envío.</p>
+        
+        <div class="total-section">
+            <span class="total-label">Total a Pagar</span>
+            <div class="total-amount">${total.toFixed(2)} €</div>
+        </div>
+        
+        <p style="text-align: center; margin-top: 30px;">
+            Nos pondremos en contacto contigo pronto si necesitamos más detalles.
+        </p>
     `;
 
     // Send mail to the store
     await transporter.sendMail({
-      from: `Tienda de Manualidades <${fromEmail}>`,
+      from: `"Tienda de Manualidades" <${fromEmail}>`,
       to: storeEmail,
-      subject: `Nuevo Pedido #${orderId}`,
-      html: emailTemplate(`Nuevo Pedido #${orderId}`, storeContent),
+      subject: `✨ Nuevo Pedido #${orderId} - ${name}`,
+      html: generateEmailHtml(`Nuevo Pedido #${orderId}`, storeContent),
     });
 
     // Send confirmation to the customer
     await transporter.sendMail({
-      from: `Tienda de Manualidades <${fromEmail}>`,
+      from: `"Tienda de Manualidades" <${fromEmail}>`,
       to: email,
-      subject: `Confirmación de tu pedido #${orderId}`,
-      html: emailTemplate(`Confirmación de pedido #${orderId}`, customerContent),
+      subject: `✨ Confirmación de tu pedido #${orderId}`,
+      html: generateEmailHtml(`Confirmación de Pedido`, customerContent),
     });
-    
+
     return {
       success: true,
-      message: "¡Gracias por tu pedido! Hemos enviado una confirmación a tu correo.",
+      message: "¡Pedido realizado con éxito! Revisa tu correo para ver la confirmación.",
     };
 
   } catch (error) {
-    console.error("Error procesando el pago y enviando correos:", error);
+    console.error("Error sending emails:", error);
     return {
       success: false,
-      message: "Hubo un error al procesar tu pedido. Por favor, inténtalo de nuevo.",
+      message: "Tu pedido se guardó, pero hubo un error al enviar los correos de confirmación.",
     };
   }
 }
