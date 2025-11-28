@@ -1,10 +1,9 @@
-
 "use server";
 
 import { z } from "zod";
 import type { CartItem } from '@/context/cart-context';
 import nodemailer from 'nodemailer';
-import 'dotenv/config';
+import { generateEmailHtml, generateOrderRows } from '@/lib/email-template';
 
 const contactSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
@@ -53,8 +52,6 @@ export async function submitContactForm(
   }
 }
 
-import { generateEmailHtml, generateOrderRows } from '@/lib/email-template';
-
 const checkoutSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
   email: z.string().email("Por favor, introduce un correo electrónico válido."),
@@ -91,12 +88,14 @@ export async function processCheckout(
 
   if (!fromEmail || !emailPassword) {
     console.error("CRITICAL ERROR: Email server credentials are missing.");
-    console.error("EMAIL_SERVER_USER:", fromEmail ? "Set" : "Missing");
-    console.error("EMAIL_SERVER_PASSWORD:", emailPassword ? "Set" : "Missing");
+
+    let missingVars = [];
+    if (!fromEmail) missingVars.push("EMAIL_SERVER_USER");
+    if (!emailPassword) missingVars.push("EMAIL_SERVER_PASSWORD");
 
     return {
       success: false,
-      message: "Error de configuración del servidor (Credenciales de correo faltantes). Por favor contacta al administrador.",
+      message: `Error de configuración: Faltan las siguientes variables en Vercel: ${missingVars.join(", ")}. Por favor agrégalas y REDESPLIEGA.`,
     };
   }
 
