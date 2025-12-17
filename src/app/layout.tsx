@@ -1,4 +1,3 @@
-
 // src/app/layout.tsx
 import type { Metadata } from 'next';
 import './globals.css';
@@ -23,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-         <link rel="icon" href="https://i.imgur.com/UKokrUq.png" />
+        <link rel="icon" href="https://i.imgur.com/UKokrUq.png" />
         <link rel="apple-touch-icon" href="https://i.imgur.com/UKokrUq.png" />
         <meta name="msapplication-TileColor" content="#070b18" />
         <meta name="theme-color" content="#070b18" />
