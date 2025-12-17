@@ -17,7 +17,7 @@ const products: Product[] = [
     {
         name: "Papa Noel para colgar",
         price: "1 €",
-        imageUrl: "https://i.imgur.com/GL2i7QD.jpeg",
+        imageUrl: "https://i.imgur.com/YSdIF9y.jpeg",
         dataAiHint: "hanging santa"
     },
 ];
