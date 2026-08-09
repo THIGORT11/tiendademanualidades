@@ -32,19 +32,24 @@ export function CartSheet() {
               <div className="flex flex-col gap-4">
                 {cartItems.map((item, index) => (
                   <div key={`${item.name}-${index}`} className="flex items-start gap-4 p-2 rounded-lg bg-muted/50">
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.name}
-                      width={64}
-                      height={64}
-                      className="rounded-md object-cover"
-                    />
+                    <div className="flex shrink-0 gap-1">
+                      {(item.imageUrls?.length ? item.imageUrls : [item.imageUrl]).map((imageUrl, imageIndex) => (
+                        <Image
+                          key={imageUrl}
+                          src={imageUrl}
+                          alt={`${item.name}${item.imageUrls?.length ? `, imagen ${imageIndex + 1}` : ''}`}
+                          width={item.imageUrls?.length ? 52 : 64}
+                          height={64}
+                          className="h-16 rounded-md object-cover"
+                        />
+                      ))}
+                    </div>
                     <div className="flex-grow">
                       <p className="font-semibold">{item.name}</p>
                       <p className="text-sm text-muted-foreground">{item.price}</p>
                       {item.customizationValue && (
                         <p className="text-sm text-primary truncate">
-                          Personalización: {item.customizationValue}
+                          {item.customization?.type === 'number' ? 'Número elegido' : 'Personalización'}: {item.customizationValue}
                         </p>
                       )}
                     </div>
