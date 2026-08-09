@@ -22,6 +22,24 @@ const products: Product[] = [
             type: 'text',
             label: 'Personalízalo como quieras'
         }
+    },
+    {
+        name: "Aquabeads a elegir",
+        price: "10 €",
+        imageUrl: "https://i.imgur.com/D8R6gVC.jpeg",
+        imageUrls: [
+            "https://i.imgur.com/D8R6gVC.jpeg",
+            "https://i.imgur.com/FFBmVQh.jpeg"
+        ],
+        dataAiHint: "aquabeads designs",
+        description: "Elige uno de los ocho diseños disponibles en las dos imágenes.",
+        customization: {
+            type: 'number',
+            label: 'Número del diseño que quieres',
+            min: 1,
+            max: 8,
+            helpText: 'La selección es obligatoria para añadir este producto al carrito.'
+        }
     }
 ];
 

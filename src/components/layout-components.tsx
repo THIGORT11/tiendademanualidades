@@ -54,12 +54,12 @@ export const Navigation = () => (
     </div>
 
     <nav className="flex flex-wrap justify-center gap-4">
-      <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/seccion-navidena" scroll={false}>Sección Navideña</Link></Button>
       <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/seccion-1" scroll={false}>Sección 1</Link></Button>
       <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/seccion-2" scroll={false}>Sección 2</Link></Button>
       <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/seccion-3" scroll={false}>Sección 3</Link></Button>
       <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/seccion-4" scroll={false}>Sección 4</Link></Button>
       <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/seccion-5" scroll={false}>Sección 5</Link></Button>
+      <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/coleccion-figuritas" scroll={false}>Colección figuritas</Link></Button>
     </nav>
   </div>
 );
