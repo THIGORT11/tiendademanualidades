@@ -14,6 +14,7 @@ const contactSchema = z.object({
 export type FormState = {
   success: boolean;
   message: string;
+  discountApplied?: boolean;
 };
 
 export async function submitContactForm(
@@ -55,11 +56,15 @@ export async function submitContactForm(
 const checkoutSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
   email: z.string().email("Por favor, introduce un correo electrónico válido."),
+  discountCode: z.string().optional(),
 });
+
+const DISCOUNT_CODE = "CUM TM";
 
 export async function processCheckout(
   cartItems: CartItem[],
   total: number,
+  discountAlreadyUsed: boolean,
   prevState: FormState,
   formData: FormData
 ): Promise<FormState> {
@@ -67,6 +72,7 @@ export async function processCheckout(
   const validatedFields = checkoutSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
+    discountCode: formData.get("discountCode")?.toString(),
   });
 
   if (!validatedFields.success) {
@@ -77,7 +83,26 @@ export async function processCheckout(
     };
   }
 
-  const { name, email } = validatedFields.data;
+  const { name, email, discountCode } = validatedFields.data;
+  const normalizedDiscountCode = discountCode?.trim().toUpperCase().replace(/\s+/g, " ");
+  const discountApplied = normalizedDiscountCode === DISCOUNT_CODE && !discountAlreadyUsed;
+
+  if (normalizedDiscountCode && normalizedDiscountCode !== DISCOUNT_CODE) {
+    return {
+      success: false,
+      message: "El código de descuento no es válido.",
+    };
+  }
+
+  if (normalizedDiscountCode === DISCOUNT_CODE && discountAlreadyUsed) {
+    return {
+      success: false,
+      message: "Este código de descuento ya se ha utilizado y solo se puede canjear una vez.",
+    };
+  }
+
+  const discountAmount = discountApplied ? total * 0.1 : 0;
+  const finalTotal = total - discountAmount;
   const orderId = `order_${Date.now()}`;
 
   // Use environment variables but allow fallbacks for the TO address if needed, 
@@ -125,10 +150,16 @@ export async function processCheckout(
                 ${orderRowsHtml}
             </tbody>
         </table>
+
+        ${discountApplied ? `
+        <div style="text-align: right; color: #cccccc; margin-top: 16px;">
+            <div>Subtotal: ${total.toFixed(2)} €</div>
+            <div style="color: #f2b736; margin-top: 6px;">Descuento CUM TM (10 %): −${discountAmount.toFixed(2)} €</div>
+        </div>` : ''}
         
         <div class="total-section">
             <span class="total-label">Total del Pedido</span>
-            <div class="total-amount">${total.toFixed(2)} €</div>
+            <div class="total-amount">${finalTotal.toFixed(2)} €</div>
         </div>
     `;
 
@@ -148,10 +179,16 @@ export async function processCheckout(
                 ${orderRowsHtml}
             </tbody>
         </table>
+
+        ${discountApplied ? `
+        <div style="text-align: right; color: #cccccc; margin-top: 16px;">
+            <div>Subtotal: ${total.toFixed(2)} €</div>
+            <div style="color: #f2b736; margin-top: 6px;">Descuento CUM TM (10 %): −${discountAmount.toFixed(2)} €</div>
+        </div>` : ''}
         
         <div class="total-section">
             <span class="total-label">Total a Pagar</span>
-            <div class="total-amount">${total.toFixed(2)} €</div>
+            <div class="total-amount">${finalTotal.toFixed(2)} €</div>
         </div>
         
         <p style="text-align: center; margin-top: 30px;">
@@ -178,6 +215,7 @@ export async function processCheckout(
     return {
       success: true,
       message: "¡Pedido realizado con éxito! Revisa tu correo para ver la confirmación.",
+      discountApplied,
     };
 
   } catch (error) {
