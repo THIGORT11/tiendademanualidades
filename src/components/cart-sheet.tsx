@@ -3,16 +3,68 @@
 
 import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
-import { Trash2 } from "lucide-react";
+import { BadgeCheck, Trash2 } from "lucide-react";
 import { CheckoutDialog } from "./checkout-dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+
+const DISCOUNT_CODE = "CUM TM";
+const DISCOUNT_STORAGE_KEY = "craftlab-discount-cum-tm-used";
 
 export function CartSheet() {
   const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, total } = useCart();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [discountCode, setDiscountCode] = useState("");
+  const [isDiscountApplied, setIsDiscountApplied] = useState(false);
+  const [hasUsedDiscount, setHasUsedDiscount] = useState(false);
+  const { toast } = useToast();
+
+  const discountAmount = isDiscountApplied ? total * 0.1 : 0;
+  const finalTotal = total - discountAmount;
+
+  useEffect(() => {
+    setHasUsedDiscount(localStorage.getItem(DISCOUNT_STORAGE_KEY) === "true");
+  }, []);
+
+  const handleApplyDiscount = () => {
+    if (hasUsedDiscount) {
+      toast({
+        title: "Código ya utilizado",
+        description: "Este código de descuento solo se puede utilizar una vez.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (discountCode.trim().toUpperCase().replace(/\s+/g, " ") !== DISCOUNT_CODE) {
+      setIsDiscountApplied(false);
+      toast({
+        title: "Código no válido",
+        description: "Comprueba el código e inténtalo de nuevo.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setDiscountCode(DISCOUNT_CODE);
+    setIsDiscountApplied(true);
+    toast({
+      title: "Descuento aplicado",
+      description: "Se ha descontado un 10 % del total de tu pedido.",
+    });
+  };
+
+  const handleDiscountUsed = () => {
+    localStorage.setItem(DISCOUNT_STORAGE_KEY, "true");
+    setHasUsedDiscount(true);
+    setIsDiscountApplied(false);
+    setDiscountCode("");
+  };
   
   const handleCheckout = () => {
     setIsCartOpen(false);
@@ -66,10 +118,54 @@ export function CartSheet() {
               </div>
             </ScrollArea>
             <SheetFooter className="mt-auto border-t pt-4">
-                <div className="w-full">
-                    <div className="flex justify-between items-center text-lg font-bold">
-                        <span>Total:</span>
-                        <span>{total.toFixed(2)} €</span>
+                <div className="w-full space-y-4">
+                    <div className="space-y-2 rounded-lg border border-primary/30 bg-muted/30 p-3">
+                      <Label htmlFor="cart-discount-code">Código de descuento</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="cart-discount-code"
+                          value={discountCode}
+                          onChange={(event) => {
+                            setDiscountCode(event.target.value);
+                            setIsDiscountApplied(false);
+                          }}
+                          placeholder="Introduce tu código"
+                          disabled={hasUsedDiscount}
+                          autoComplete="off"
+                          className="min-w-0 flex-1"
+                        />
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={handleApplyDiscount}
+                          disabled={hasUsedDiscount || isDiscountApplied}
+                        >
+                          {isDiscountApplied ? <BadgeCheck className="mr-2 h-4 w-4" /> : null}
+                          {isDiscountApplied ? "Aplicado" : "Canjear"}
+                        </Button>
+                      </div>
+                      {hasUsedDiscount ? (
+                        <p className="text-xs text-muted-foreground">Ya has utilizado este código de descuento.</p>
+                      ) : null}
+                    </div>
+
+                    <div className="space-y-1">
+                      {isDiscountApplied ? (
+                        <>
+                          <div className="flex justify-between text-sm text-muted-foreground">
+                            <span>Subtotal:</span>
+                            <span>{total.toFixed(2)} €</span>
+                          </div>
+                          <div className="flex justify-between text-sm text-primary">
+                            <span>Descuento (10 %):</span>
+                            <span>−{discountAmount.toFixed(2)} €</span>
+                          </div>
+                        </>
+                      ) : null}
+                      <div className="flex justify-between items-center text-lg font-bold">
+                          <span>Total:</span>
+                          <span>{finalTotal.toFixed(2)} €</span>
+                      </div>
                     </div>
                     <Button size="lg" className="w-full mt-4" onClick={handleCheckout}>
                         Finalizar Compra
@@ -85,7 +181,13 @@ export function CartSheet() {
         )}
       </SheetContent>
     </Sheet>
-    <CheckoutDialog isOpen={isCheckoutOpen} onOpenChange={setIsCheckoutOpen} />
+    <CheckoutDialog
+      isOpen={isCheckoutOpen}
+      onOpenChange={setIsCheckoutOpen}
+      isDiscountApplied={isDiscountApplied}
+      hasUsedDiscount={hasUsedDiscount}
+      onDiscountUsed={handleDiscountUsed}
+    />
     </>
   );
 }
