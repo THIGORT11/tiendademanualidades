@@ -4,13 +4,14 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { CartProvider } from '@/context/cart-context';
 import { CartSheet } from '@/components/cart-sheet';
+import { storeConfig } from '@/content/store';
 
 export const metadata: Metadata = {
-  title: 'CraftLab - Tienda de Manualidades',
-  description: 'Descubre un mundo de creatividad con nuestra exclusiva selección de materiales y kits de manualidades. Calidad premium para tus proyectos.',
-  keywords: "manualidades, tienda de manualidades, arte, creatividad, diy, materiales de arte, kits de manualidades, premium, exclusivo",
+  title: storeConfig.metadata.title,
+  description: storeConfig.metadata.description,
+  keywords: storeConfig.metadata.keywords,
   icons: {
-    icon: 'https://i.imgur.com/WaDyt2D.png',
+    icon: storeConfig.brand.faviconUrl,
   },
 };
 
@@ -22,8 +23,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <link rel="icon" href="https://i.imgur.com/UKokrUq.png" />
-        <link rel="apple-touch-icon" href="https://i.imgur.com/UKokrUq.png" />
+        <link rel="icon" href={storeConfig.brand.faviconUrl} />
+        <link rel="apple-touch-icon" href={storeConfig.brand.faviconUrl} />
         <meta name="msapplication-TileColor" content="#070b18" />
         <meta name="theme-color" content="#070b18" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

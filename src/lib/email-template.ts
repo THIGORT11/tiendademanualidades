@@ -1,3 +1,6 @@
+import type { CartItem } from '@/context/cart-context';
+import { storeConfig } from '@/content/store';
+import { formatPrice } from '@/lib/product-pricing';
 
 export const generateEmailHtml = (title: string, content: string) => `
 <!DOCTYPE html>
@@ -127,28 +130,28 @@ export const generateEmailHtml = (title: string, content: string) => `
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://i.imgur.com/CWsII5N.png" alt="Tienda de Manualidades Logo">
+            <img src="${storeConfig.brand.logoUrl}" alt="${storeConfig.brand.displayName} Logo">
         </div>
         <div class="content">
             ${content}
         </div>
         <div class="footer">
             <p style="margin-bottom: 10px;">Gracias por confiar en nosotros</p>
-            &copy; ${new Date().getFullYear()} Tienda de Manualidades. Todos los derechos reservados.
+            &copy; ${new Date().getFullYear()} ${storeConfig.footer.companyName}. ${storeConfig.footer.copyrightSuffix}
         </div>
     </div>
 </body>
 </html>
 `;
 
-export const generateOrderRows = (items: any[]) => {
+export const generateOrderRows = (items: CartItem[]) => {
     return items.map(item => `
         <tr>
             <td>
                 <div style="font-weight: 500; color: #fff;">${item.name}</div>
                 ${item.customizationValue ? `<div style="font-size: 12px; color: #999; margin-top: 4px;">Personalización: ${item.customizationValue}</div>` : ''}
             </td>
-            <td style="text-align: right; font-family: 'Roboto', monospace;">${item.price}</td>
+            <td style="text-align: right; font-family: 'Roboto', monospace;">${formatPrice(item.price, storeConfig.currency.symbol)}</td>
         </tr>
     `).join('');
 };

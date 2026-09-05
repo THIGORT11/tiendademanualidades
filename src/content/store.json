@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "brand": {
+    "name": "tienda-de-manualidades",
+    "displayName": "Tienda de Manualidades",
+    "logoUrl": "https://i.imgur.com/CWsII5N.png",
+    "faviconUrl": "https://i.imgur.com/UKokrUq.png"
+  },
+  "metadata": {
+    "title": "CraftLab - Tienda de Manualidades",
+    "description": "Descubre un mundo de creatividad con nuestra exclusiva selección de materiales y kits de manualidades. Calidad premium para tus proyectos.",
+    "keywords": ["manualidades", "tienda de manualidades", "arte", "creatividad", "diy", "materiales de arte", "kits de manualidades", "premium", "exclusivo"],
+    "home": {
+      "title": "Tienda de Manualidades | Calidad y Creatividad",
+      "description": "Descubre materiales de manualidades de calidad premium y kits inspiradores para transformar tus ideas en realidad.",
+      "socialTitle": "Tienda de Manualidades Premium",
+      "socialDescription": "Descubre un mundo de creatividad con nuestra exclusiva selección de materiales y kits de manualidades. Calidad premium para tus proyectos.",
+      "socialImageUrl": "https://i.imgur.com/WaDyt2D.png"
+    }
+  },
+  "catalog": {
+    "searchPlaceholder": "Buscar hilos, pinturas, kits...",
+    "newBadgeLabel": "¡NUEVO!",
+    "featuredBadgeLabel": "Destacado"
+  },
+  "footer": {
+    "companyName": "Tienda de Manualidades",
+    "copyrightYear": 2025,
+    "copyrightSuffix": "Todos los derechos reservados.",
+    "socialLinks": [
+      { "id": "facebook", "label": "Facebook", "href": "#", "sortOrder": 10 },
+      { "id": "twitter", "label": "Twitter", "href": "#", "sortOrder": 20 },
+      { "id": "instagram", "label": "Instagram", "href": "#", "sortOrder": 30 }
+    ]
+  },
+  "orders": {
+    "adminEmail": "tiendademanualidades25@gmail.com"
+  },
+  "currency": {
+    "code": "EUR",
+    "symbol": "€"
+  }
+}

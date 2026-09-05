@@ -4,6 +4,10 @@ import { z } from "zod";
 import type { CartItem } from '@/context/cart-context';
 import nodemailer from 'nodemailer';
 import { generateEmailHtml, generateOrderRows } from '@/lib/email-template';
+import { calculateCouponDiscount, findCoupon } from '@/content/promotions';
+import { storeConfig } from '@/content/store';
+import { products } from '@/content/catalog';
+import { getStockValidationError } from '@/lib/product-stock';
 
 const contactSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
@@ -59,8 +63,6 @@ const checkoutSchema = z.object({
   discountCode: z.string().optional(),
 });
 
-const DISCOUNT_CODE = "CUM TM";
-
 export async function processCheckout(
   cartItems: CartItem[],
   total: number,
@@ -83,38 +85,47 @@ export async function processCheckout(
     };
   }
 
-  const { name, email, discountCode } = validatedFields.data;
-  const normalizedDiscountCode = discountCode?.trim().toUpperCase().replace(/\s+/g, " ");
-  const discountApplied = normalizedDiscountCode === DISCOUNT_CODE && !discountAlreadyUsed;
+  if (cartItems.length === 0) {
+    return { success: false, message: 'El carrito está vacío.' };
+  }
 
-  if (normalizedDiscountCode && normalizedDiscountCode !== DISCOUNT_CODE) {
+  const stockError = getStockValidationError(cartItems, products);
+  if (stockError) {
+    return { success: false, message: stockError };
+  }
+
+  const { name, email, discountCode } = validatedFields.data;
+  const coupon = discountCode ? findCoupon(discountCode) : undefined;
+  const discountApplied = Boolean(coupon) && !discountAlreadyUsed;
+
+  if (discountCode && !coupon) {
     return {
       success: false,
       message: "El código de descuento no es válido.",
     };
   }
 
-  if (normalizedDiscountCode === DISCOUNT_CODE && discountAlreadyUsed) {
+  if (coupon && discountAlreadyUsed) {
     return {
       success: false,
       message: "Este código de descuento ya se ha utilizado y solo se puede canjear una vez.",
     };
   }
 
-  const discountAmount = discountApplied ? total * 0.1 : 0;
+  const discountAmount = discountApplied ? calculateCouponDiscount(total, coupon) : 0;
   const finalTotal = total - discountAmount;
   const orderId = `order_${Date.now()}`;
 
   // Use environment variables but allow fallbacks for the TO address if needed, 
   // though credentials MUST be present.
-  const storeEmail = process.env.EMAIL_TO || 'tiendademanualidades25@gmail.com';
+  const storeEmail = process.env.EMAIL_TO || storeConfig.orders.adminEmail;
   const fromEmail = process.env.EMAIL_SERVER_USER;
   const emailPassword = process.env.EMAIL_SERVER_PASSWORD;
 
   if (!fromEmail || !emailPassword) {
     console.error("CRITICAL ERROR: Email server credentials are missing.");
 
-    let missingVars = [];
+    const missingVars = [];
     if (!fromEmail) missingVars.push("EMAIL_SERVER_USER");
     if (!emailPassword) missingVars.push("EMAIL_SERVER_PASSWORD");
 
@@ -153,13 +164,13 @@ export async function processCheckout(
 
         ${discountApplied ? `
         <div style="text-align: right; color: #cccccc; margin-top: 16px;">
-            <div>Subtotal: ${total.toFixed(2)} €</div>
-            <div style="color: #f2b736; margin-top: 6px;">Descuento CUM TM (10 %): −${discountAmount.toFixed(2)} €</div>
+            <div>Subtotal: ${total.toFixed(2)} ${storeConfig.currency.symbol}</div>
+            <div style="color: #f2b736; margin-top: 6px;">${coupon?.name}: −${discountAmount.toFixed(2)} ${storeConfig.currency.symbol}</div>
         </div>` : ''}
         
         <div class="total-section">
             <span class="total-label">Total del Pedido</span>
-            <div class="total-amount">${finalTotal.toFixed(2)} €</div>
+            <div class="total-amount">${finalTotal.toFixed(2)} ${storeConfig.currency.symbol}</div>
         </div>
     `;
 
@@ -182,13 +193,13 @@ export async function processCheckout(
 
         ${discountApplied ? `
         <div style="text-align: right; color: #cccccc; margin-top: 16px;">
-            <div>Subtotal: ${total.toFixed(2)} €</div>
-            <div style="color: #f2b736; margin-top: 6px;">Descuento CUM TM (10 %): −${discountAmount.toFixed(2)} €</div>
+            <div>Subtotal: ${total.toFixed(2)} ${storeConfig.currency.symbol}</div>
+            <div style="color: #f2b736; margin-top: 6px;">${coupon?.name}: −${discountAmount.toFixed(2)} ${storeConfig.currency.symbol}</div>
         </div>` : ''}
         
         <div class="total-section">
             <span class="total-label">Total a Pagar</span>
-            <div class="total-amount">${finalTotal.toFixed(2)} €</div>
+            <div class="total-amount">${finalTotal.toFixed(2)} ${storeConfig.currency.symbol}</div>
         </div>
         
         <p style="text-align: center; margin-top: 30px;">
@@ -198,7 +209,7 @@ export async function processCheckout(
 
     // Send mail to the store
     await transporter.sendMail({
-      from: `"Tienda de Manualidades" <${fromEmail}>`,
+      from: `"${storeConfig.brand.displayName}" <${fromEmail}>`,
       to: storeEmail,
       subject: `✨ Nuevo Pedido #${orderId} - ${name}`,
       html: generateEmailHtml(`Nuevo Pedido #${orderId}`, storeContent),
@@ -206,7 +217,7 @@ export async function processCheckout(
 
     // Send confirmation to the customer
     await transporter.sendMail({
-      from: `"Tienda de Manualidades" <${fromEmail}>`,
+      from: `"${storeConfig.brand.displayName}" <${fromEmail}>`,
       to: email,
       subject: `✨ Confirmación de tu pedido #${orderId}`,
       html: generateEmailHtml(`Confirmación de Pedido`, customerContent),

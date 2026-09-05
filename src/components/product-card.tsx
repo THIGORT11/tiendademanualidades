@@ -12,23 +12,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { ShoppingCart, Edit, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCart } from "@/context/cart-context";
+import type { Product } from '@/content/catalog';
+import { storeConfig } from '@/content/store';
+import { formatPrice, getProductPricing } from '@/lib/product-pricing';
+import { getProductStockLabel, hasNewProductTag, isProductOutOfStock } from '@/lib/product-stock';
 
-export interface Product {
-  name: string;
-  price: string;
-  imageUrl: string;
-  imageUrls?: string[];
-  dataAiHint: string;
-  description?: string;
-  customization?: {
-    type: 'text' | 'radio' | 'number';
-    label: string;
-    options?: string[];
-    min?: number;
-    max?: number;
-    helpText?: string;
-  };
-}
+export type { Product } from '@/content/catalog';
 
 interface ProductCardProps {
   product: Product;
@@ -40,17 +29,23 @@ export function ProductCard({ product }: ProductCardProps) {
   const [isChoiceDialogOpen, setIsChoiceDialogOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const { toast } = useToast();
-  const { addToCart } = useCart();
+  const { addToCart, canAddToCart } = useCart();
 
-  const productImages = product.imageUrls?.length ? product.imageUrls : [product.imageUrl];
-  const isNumberChoice = product.customization?.type === 'number';
+  const productImages = product.images;
+  const numberCustomization = product.customization?.type === 'number' ? product.customization : undefined;
+  const isNumberChoice = Boolean(numberCustomization);
+  const pricing = getProductPricing(product);
+  const isOutOfStock = isProductOutOfStock(product);
+  const hasNewTag = hasNewProductTag(product);
+  const stockLabel = getProductStockLabel(product);
+  const isAtStockLimit = !isOutOfStock && !canAddToCart(product);
 
   const validateCustomization = () => {
     if (!product.customization || customizationValue.trim()) {
       if (isNumberChoice) {
         const selectedNumber = Number(customizationValue);
-        const min = product.customization?.min ?? 1;
-        const max = product.customization?.max ?? 8;
+        const min = numberCustomization?.min ?? 1;
+        const max = numberCustomization?.max ?? 8;
         return Number.isInteger(selectedNumber) && selectedNumber >= min && selectedNumber <= max;
       }
       return true;
@@ -63,7 +58,7 @@ export function ProductCard({ product }: ProductCardProps) {
       toast({
         title: isNumberChoice ? "Elige un número válido" : "Personalización requerida",
         description: isNumberChoice
-          ? `Introduce un número del ${product.customization?.min ?? 1} al ${product.customization?.max ?? 8}.`
+          ? `Introduce un número del ${numberCustomization?.min ?? 1} al ${numberCustomization?.max ?? 8}.`
           : "Por favor, completa la opción de personalización.",
         variant: "destructive",
       });
@@ -71,11 +66,6 @@ export function ProductCard({ product }: ProductCardProps) {
     }
     
     addToCart(product, customizationValue);
-    
-    toast({
-      title: "Producto añadido",
-      description: `${product.name} ${customizationValue ? `(${customizationValue})` : ''} ha sido añadido al carrito.`,
-    });
     
     if (product.customization) {
         setCustomizationValue('');
@@ -108,13 +98,27 @@ export function ProductCard({ product }: ProductCardProps) {
     <Card className="flex flex-col overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-card">
       <CardHeader className="p-0">
         <div className="relative w-full h-64 group">
+          {(product.featured || hasNewTag) ? (
+            <div className="absolute left-3 top-3 z-10 flex flex-col items-start gap-1 pointer-events-none">
+              {product.featured ? (
+                <span className="rounded-md bg-primary px-2 py-1 text-xs font-bold text-primary-foreground shadow">
+                  {storeConfig.catalog.featuredBadgeLabel}
+                </span>
+              ) : null}
+              {hasNewTag ? (
+                <span className="rounded-md bg-amber-500 px-2 py-1 text-xs font-bold text-amber-950 shadow">
+                  {storeConfig.catalog.newBadgeLabel}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
           <Image
             src={productImages[activeImageIndex]}
             alt={`${product.name}${productImages.length > 1 ? `, imagen ${activeImageIndex + 1} de ${productImages.length}` : ''}`}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className={productImages.length > 1 ? "object-contain bg-white" : "object-cover"}
-            data-ai-hint={product.dataAiHint}
+            data-ai-hint={product.aiHint}
           />
           {productImages.length > 1 && (
             <>
@@ -176,19 +180,33 @@ export function ProductCard({ product }: ProductCardProps) {
             </RadioGroup>
           </div>
         )}
+        {stockLabel ? (
+          <p className={`mt-3 text-sm font-medium ${isOutOfStock ? 'text-destructive' : 'text-muted-foreground'}`}>
+            {stockLabel}
+          </p>
+        ) : null}
       </CardContent>
       <CardFooter className="p-4 flex justify-between items-center bg-muted/30 mt-auto">
-        <p className="text-2xl font-bold text-primary">{product.price}</p>
-        {showAddToCart ? (
-           <Button onClick={handleAddToCart}>
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+          {product.originalPrice !== undefined ? <span className="text-sm text-muted-foreground line-through">{formatPrice(pricing.basePrice, storeConfig.currency.symbol)}</span> : null}
+          <span className="text-2xl font-bold text-primary">{formatPrice(pricing.currentPrice, storeConfig.currency.symbol)}</span>
+          {pricing.discountPercentage !== undefined ? (
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary" aria-label={`${pricing.discountPercentage}% de descuento`}>
+              −{pricing.discountPercentage}%
+            </span>
+          ) : null}
+        </div>
+        {isOutOfStock ? <Button disabled>Agotado</Button> : null}
+        {!isOutOfStock && showAddToCart ? (
+           <Button onClick={handleAddToCart} disabled={isAtStockLimit}>
              <ShoppingCart className="mr-2 h-4 w-4" />
-             Añadir al carrito
+             {isAtStockLimit ? 'Máximo en carrito' : 'Añadir al carrito'}
            </Button>
         ) : null}
-        {showPersonalizeButton ? (
-          <Button onClick={handleCustomizeClick}>
+        {!isOutOfStock && showPersonalizeButton ? (
+          <Button onClick={handleCustomizeClick} disabled={isAtStockLimit}>
             {isNumberChoice ? <ShoppingCart className="mr-2 h-4 w-4" /> : <Edit className="mr-2 h-4 w-4" />}
-            {isNumberChoice ? 'Añadir al carrito' : 'Personalizar'}
+            {isAtStockLimit ? 'Máximo en carrito' : isNumberChoice ? 'Añadir al carrito' : 'Personalizar'}
           </Button>
         ) : null}
       </CardFooter>
@@ -229,23 +247,23 @@ export function ProductCard({ product }: ProductCardProps) {
                 id={`choice-${product.name}`}
                 type="number"
                 inputMode="numeric"
-                min={product.customization?.min}
-                max={product.customization?.max}
+                min={numberCustomization?.min}
+                max={numberCustomization?.max}
                 step={1}
                 value={customizationValue}
                 onChange={(event) => setCustomizationValue(event.target.value)}
                 placeholder="Escribe un número del 1 al 8"
                 className="bg-background"
               />
-              {product.customization?.helpText && (
-                <p className="text-xs text-muted-foreground">{product.customization.helpText}</p>
+              {numberCustomization?.helpText && (
+                <p className="text-xs text-muted-foreground">{numberCustomization.helpText}</p>
               )}
             </div>
 
             <DialogFooter>
-              <Button type="button" onClick={handleAddToCart} className="w-full sm:w-auto">
+              <Button type="button" onClick={handleAddToCart} className="w-full sm:w-auto" disabled={isAtStockLimit}>
                 <ShoppingCart className="mr-2 h-4 w-4" />
-                Confirmar y añadir
+                {isAtStockLimit ? 'Máximo en carrito' : 'Confirmar y añadir'}
               </Button>
             </DialogFooter>
           </DialogContent>

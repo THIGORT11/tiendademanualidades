@@ -9,6 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test:content": "node --experimental-strip-types tests/content.mjs",
+    "test:stock": "node --experimental-strip-types tests/stock.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -1,20 +1,21 @@
 
 import { Header, Footer, Navigation } from "@/components/layout-components";
 import type { Metadata } from "next";
+import { storeConfig } from "@/content/store";
 
 export const metadata: Metadata = {
-  title: "Tienda de Manualidades | Calidad y Creatividad",
-  description: "Descubre materiales de manualidades de calidad premium y kits inspiradores para transformar tus ideas en realidad.",
+  title: storeConfig.metadata.home.title,
+  description: storeConfig.metadata.home.description,
   openGraph: {
-    title: "Tienda de Manualidades Premium",
-    description: "Descubre un mundo de creatividad con nuestra exclusiva selección de materiales y kits de manualidades. Calidad premium para tus proyectos.",
-    images: [{ url: "https://i.imgur.com/WaDyt2D.png" }],
+    title: storeConfig.metadata.home.socialTitle,
+    description: storeConfig.metadata.home.socialDescription,
+    images: [{ url: storeConfig.metadata.home.socialImageUrl }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tienda de Manualidades Premium",
-    description: "Descubre un mundo de creatividad con nuestra exclusiva selección de materiales y kits de manualidades. Calidad premium para tus proyectos.",
-    images: ["https://i.imgur.com/WaDyt2D.png"],
+    title: storeConfig.metadata.home.socialTitle,
+    description: storeConfig.metadata.home.socialDescription,
+    images: [storeConfig.metadata.home.socialImageUrl],
   },
 };
 

@@ -7,6 +7,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/cart-context";
+import { categories } from "@/content/catalog";
+import { storeConfig } from "@/content/store";
+
+const socialIcons = { facebook: Facebook, twitter: Twitter, instagram: Instagram } as const;
 
 export const Header = () => {
   const { setIsCartOpen, cartItems } = useCart();
@@ -16,8 +20,8 @@ export const Header = () => {
       <div className="max-w-4xl mx-auto flex justify-center items-center relative">
         <Link href="/">
           <Image
-            src="https://i.imgur.com/CWsII5N.png"
-            alt="Logo de la Tienda de Manualidades"
+            src={storeConfig.brand.logoUrl}
+            alt={`Logo de ${storeConfig.brand.displayName}`}
             width={350}
             height={350}
             priority
@@ -47,19 +51,18 @@ export const Header = () => {
 export const Navigation = () => (
   <div className="max-w-4xl mx-auto z-10 flex flex-col items-center">
     <div className="flex w-full max-w-xl mx-auto items-center space-x-2 border border-primary rounded-full p-2 mb-8 bg-card shadow-lg">
-      <Input type="search" placeholder="Buscar hilos, pinturas, kits..." className="border-0 bg-transparent text-base focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow" />
+      <Input type="search" placeholder={storeConfig.catalog.searchPlaceholder} className="border-0 bg-transparent text-base focus-visible:ring-0 focus-visible:ring-offset-0 flex-grow" />
       <Button type="submit" size="icon" className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
         <Search className="h-5 w-5" />
       </Button>
     </div>
 
     <nav className="flex flex-wrap justify-center gap-4">
-      <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/seccion-1" scroll={false}>Sección 1</Link></Button>
-      <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/seccion-2" scroll={false}>Sección 2</Link></Button>
-      <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/seccion-3" scroll={false}>Sección 3</Link></Button>
-      <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/seccion-4" scroll={false}>Sección 4</Link></Button>
-      <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/seccion-5" scroll={false}>Sección 5</Link></Button>
-      <Button variant="link" asChild size="lg" className="text-xl px-6 py-3"><Link href="/coleccion-figuritas" scroll={false}>Colección figuritas</Link></Button>
+      {categories.map((category) => (
+        <Button key={category.id} variant="link" asChild size="lg" className="text-xl px-6 py-3">
+          <Link href={`/${category.id}`} scroll={false}>{category.name}</Link>
+        </Button>
+      ))}
     </nav>
   </div>
 );
@@ -70,24 +73,19 @@ export const Footer = () => (
     <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
       <div className="flex items-center gap-4">
         <Image
-          src="https://i.imgur.com/CWsII5N.png"
-          alt="Logo de la Tienda de Manualidades en el pie de página"
+          src={storeConfig.brand.logoUrl}
+          alt={`Logo de ${storeConfig.brand.displayName} en el pie de página`}
           width={50}
           height={50}
           className="rounded-full"
         />
-        <p className="text-sm">&copy; 2025 Tienda de Manualidades. <br /> Todos los derechos reservados.</p>
+        <p className="text-sm">&copy; {storeConfig.footer.copyrightYear} {storeConfig.footer.companyName}. <br /> {storeConfig.footer.copyrightSuffix}</p>
       </div>
       <div className="flex justify-center space-x-6">
-        <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-300" aria-label="Facebook">
-          <Facebook />
-        </a>
-        <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-300" aria-label="Twitter">
-          <Twitter />
-        </a>
-        <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-300" aria-label="Instagram">
-          <Instagram />
-        </a>
+        {[...storeConfig.footer.socialLinks].sort((a, b) => a.sortOrder - b.sortOrder).map((link) => {
+          const Icon = socialIcons[link.id];
+          return <a key={link.id} href={link.href} className="text-muted-foreground hover:text-primary transition-colors duration-300" aria-label={link.label}><Icon /></a>;
+        })}
       </div>
     </div>
   </footer>

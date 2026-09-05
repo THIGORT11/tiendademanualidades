@@ -18,11 +18,15 @@ import { processCheckout, type FormState } from "@/app/actions";
 import { useEffect, useRef, useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { Loader2 } from "lucide-react";
+import { calculateCouponDiscount, findCoupon } from '@/content/promotions';
+import { formatPrice } from '@/lib/product-pricing';
+import { storeConfig } from '@/content/store';
 
 interface CheckoutDialogProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   isDiscountApplied: boolean;
+  discountCode?: string;
   hasUsedDiscount: boolean;
   onDiscountUsed: () => void;
 }
@@ -31,8 +35,6 @@ const initialState: FormState = {
   success: false,
   message: "",
 };
-
-const DISCOUNT_CODE = "CUM TM";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -52,6 +54,7 @@ export function CheckoutDialog({
   isOpen,
   onOpenChange,
   isDiscountApplied,
+  discountCode,
   hasUsedDiscount,
   onDiscountUsed,
 }: CheckoutDialogProps) {
@@ -59,7 +62,8 @@ export function CheckoutDialog({
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
 
-  const discountAmount = isDiscountApplied ? total * 0.1 : 0;
+  const appliedCoupon = discountCode ? findCoupon(discountCode) : undefined;
+  const discountAmount = isDiscountApplied ? calculateCouponDiscount(total, appliedCoupon) : 0;
   const finalTotal = total - discountAmount;
 
   const processCheckoutWithItems = processCheckout.bind(null, cartItems, total, hasUsedDiscount);
@@ -109,21 +113,21 @@ export function CheckoutDialog({
                 <Label htmlFor="email">Correo Electrónico</Label>
                 <Input id="email" name="email" type="email" placeholder="tu@email.com" required />
             </div>
-            <input type="hidden" name="discountCode" value={isDiscountApplied ? DISCOUNT_CODE : ""} />
+            <input type="hidden" name="discountCode" value={isDiscountApplied ? discountCode : ""} />
             <div className="space-y-2 rounded-lg bg-muted/50 p-4 text-sm">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>{total.toFixed(2)} €</span>
+                <span>{formatPrice(total, storeConfig.currency.symbol)}</span>
               </div>
               {isDiscountApplied && (
                 <div className="flex justify-between text-primary">
-                  <span>Descuento (10 %)</span>
-                  <span>−{discountAmount.toFixed(2)} €</span>
+                  <span>{appliedCoupon?.name}</span>
+                  <span>−{formatPrice(discountAmount, storeConfig.currency.symbol)}</span>
                 </div>
               )}
               <div className="flex justify-between border-t pt-2 text-base font-bold">
                 <span>Total</span>
-                <span>{finalTotal.toFixed(2)} €</span>
+                <span>{formatPrice(finalTotal, storeConfig.currency.symbol)}</span>
               </div>
             </div>
             <DialogFooter>

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "discounts": [],
+  "coupons": [
+    {
+      "id": "cum-tm",
+      "name": "Código CUM TM",
+      "code": "CUM TM",
+      "active": true,
+      "discountType": "percentage",
+      "discountValue": 10,
+      "usageLimitPerDevice": 1,
+      "legacyStorageKeys": ["craftlab-discount-cum-tm-used"],
+      "sortOrder": 10
+    }
+  ],
+  "banners": []
+}
