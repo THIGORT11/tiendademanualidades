@@ -1,12 +1,42 @@
 {
   "schemaVersion": 1,
   "categories": [
-    { "id": "seccion-1", "name": "Sección 1", "active": true, "sortOrder": 10 },
-    { "id": "seccion-2", "name": "Sección 2", "active": true, "sortOrder": 20 },
-    { "id": "seccion-3", "name": "Sección 3", "active": true, "sortOrder": 30 },
-    { "id": "seccion-4", "name": "Sección 4", "active": true, "sortOrder": 40 },
-    { "id": "seccion-5", "name": "Sección 5", "active": true, "sortOrder": 50 },
-    { "id": "coleccion-figuritas", "name": "Colección figuritas", "active": true, "sortOrder": 60 }
+    {
+      "id": "seccion-1",
+      "name": "Sección 1",
+      "active": true,
+      "sortOrder": 10
+    },
+    {
+      "id": "seccion-2",
+      "name": "Sección 2",
+      "active": true,
+      "sortOrder": 20
+    },
+    {
+      "id": "seccion-3",
+      "name": "Sección 3",
+      "active": true,
+      "sortOrder": 30
+    },
+    {
+      "id": "seccion-4",
+      "name": "Sección 4",
+      "active": true,
+      "sortOrder": 40
+    },
+    {
+      "id": "seccion-5",
+      "name": "Sección 5",
+      "active": true,
+      "sortOrder": 50
+    },
+    {
+      "id": "coleccion-figuritas",
+      "name": "Colección figuritas",
+      "active": true,
+      "sortOrder": 60
+    }
   ],
   "products": [
     {
@@ -14,7 +44,9 @@
       "name": "Álbum de cromos",
       "description": "",
       "price": 5,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512860181.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512860181.jpg"
+      ],
       "categoryId": "seccion-1",
       "tags": [],
       "aiHint": "sticker album",
@@ -28,7 +60,9 @@
       "name": "Sobre",
       "description": "",
       "price": 2,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512860176.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512860176.jpg"
+      ],
       "categoryId": "seccion-1",
       "tags": [],
       "aiHint": "trading cards",
@@ -42,7 +76,9 @@
       "name": "Cuaderno",
       "description": "",
       "price": 3,
-      "images": ["https://i.imgur.com/nHzHIpK.jpeg"],
+      "images": [
+        "https://i.imgur.com/nHzHIpK.jpeg"
+      ],
       "categoryId": "seccion-1",
       "tags": [],
       "aiHint": "notebook",
@@ -56,7 +92,9 @@
       "name": "Marcapáginas",
       "description": "",
       "price": 1,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512822724.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512822724.jpg"
+      ],
       "categoryId": "seccion-2",
       "tags": [],
       "aiHint": "bookmark",
@@ -70,7 +108,9 @@
       "name": "Libro de leer",
       "description": "",
       "price": 2,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512870153.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512870153.jpg"
+      ],
       "categoryId": "seccion-2",
       "tags": [],
       "aiHint": "book",
@@ -84,7 +124,9 @@
       "name": "Libro El paradón",
       "description": "",
       "price": 5,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4529400273.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4529400273.jpg"
+      ],
       "categoryId": "seccion-2",
       "tags": [],
       "aiHint": "book cover",
@@ -98,7 +140,9 @@
       "name": "Libro Salvando partidos",
       "description": "",
       "price": 5,
-      "images": ["https://i.imgur.com/MYAhDpJ.jpeg"],
+      "images": [
+        "https://i.imgur.com/MYAhDpJ.jpeg"
+      ],
       "categoryId": "seccion-2",
       "tags": [],
       "aiHint": "sports book",
@@ -112,7 +156,9 @@
       "name": "Libro La mejor parada",
       "description": "",
       "price": 5,
-      "images": ["https://i.imgur.com/SGcu25m.jpeg"],
+      "images": [
+        "https://i.imgur.com/SGcu25m.jpeg"
+      ],
       "categoryId": "seccion-2",
       "tags": [],
       "aiHint": "soccer book",
@@ -126,7 +172,9 @@
       "name": "Libro Todo lo que hay detrás del torneo de bebes",
       "description": "",
       "price": 5,
-      "images": ["https://placehold.co/400x600?text=Torneo+Bebes"],
+      "images": [
+        "https://placehold.co/400x600?text=Torneo+Bebeshttps://imgur.com/a/JlLnXIe#Obwzgwv"
+      ],
       "categoryId": "seccion-2",
       "tags": [],
       "aiHint": "book",
@@ -140,7 +188,9 @@
       "name": "Kittydoo",
       "description": "",
       "price": 2,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512923600.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512923600.jpg"
+      ],
       "categoryId": "seccion-3",
       "tags": [],
       "aiHint": "cat toy",
@@ -154,7 +204,9 @@
       "name": "Animal surprise",
       "description": "",
       "price": 4,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512923608.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512923608.jpg"
+      ],
       "categoryId": "seccion-3",
       "tags": [],
       "aiHint": "surprise egg",
@@ -168,7 +220,9 @@
       "name": "Título de lettering",
       "description": "",
       "price": 3,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512956979.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512956979.jpg"
+      ],
       "categoryId": "seccion-3",
       "tags": [],
       "aiHint": "lettering art",
@@ -176,14 +230,19 @@
       "featured": false,
       "active": true,
       "sortOrder": 120,
-      "customization": { "type": "text", "label": "Personalízalo como quieras" }
+      "customization": {
+        "type": "text",
+        "label": "Personalízalo como quieras"
+      }
     },
     {
       "id": "squishy",
       "name": "Squishy",
       "description": "",
       "price": 1,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512964138.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512964138.jpg"
+      ],
       "categoryId": "seccion-3",
       "tags": [],
       "aiHint": "squishy toy",
@@ -197,7 +256,9 @@
       "name": "Joyas",
       "description": "",
       "price": 3,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512965666.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512965666.jpg"
+      ],
       "categoryId": "seccion-4",
       "tags": [],
       "aiHint": "jewelry beads",
@@ -205,14 +266,24 @@
       "featured": false,
       "active": true,
       "sortOrder": 140,
-      "customization": { "type": "radio", "label": "Elige tu tipo de joya", "options": ["Anillos", "Collares", "Pulseras"] }
+      "customization": {
+        "type": "radio",
+        "label": "Elige tu tipo de joya",
+        "options": [
+          "Anillos",
+          "Collares",
+          "Pulseras"
+        ]
+      }
     },
     {
       "id": "dibujo",
       "name": "Dibujo",
       "description": "",
       "price": 1,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512965671.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512965671.jpg"
+      ],
       "categoryId": "seccion-4",
       "tags": [],
       "aiHint": "coloring page",
@@ -220,14 +291,20 @@
       "featured": false,
       "active": true,
       "sortOrder": 150,
-      "customization": { "type": "text", "label": "Personalízalo como quieras" }
+      "customization": {
+        "type": "text",
+        "label": "Personalízalo como quieras"
+      }
     },
     {
       "id": "aquabeads-a-elegir",
       "name": "Aquabeads a elegir",
       "description": "Elige uno de los ocho diseños disponibles en las dos imágenes.",
       "price": 10,
-      "images": ["https://i.imgur.com/D8R6gVC.jpeg", "https://i.imgur.com/FFBmVQh.jpeg"],
+      "images": [
+        "https://i.imgur.com/D8R6gVC.jpeg",
+        "https://i.imgur.com/FFBmVQh.jpeg"
+      ],
       "categoryId": "seccion-4",
       "tags": [],
       "aiHint": "aquabeads designs",
@@ -248,7 +325,9 @@
       "name": "Cinta decorativa",
       "description": "",
       "price": 1,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512985552.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512985552.jpg"
+      ],
       "categoryId": "seccion-5",
       "tags": [],
       "aiHint": "decorative tape",
@@ -256,14 +335,19 @@
       "featured": false,
       "active": true,
       "sortOrder": 170,
-      "customization": { "type": "text", "label": "Personalízala como quieras" }
+      "customization": {
+        "type": "text",
+        "label": "Personalízala como quieras"
+      }
     },
     {
       "id": "pegatina-para-la-ropa",
       "name": "Pegatina para la ropa",
       "description": "",
       "price": 2,
-      "images": ["https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512985314.jpg"],
+      "images": [
+        "https://d2j6dbq0eux0bg.cloudfront.net/images/107979772/4512985314.jpg"
+      ],
       "categoryId": "seccion-5",
       "tags": [],
       "aiHint": "clothing patch",
@@ -271,14 +355,19 @@
       "featured": false,
       "active": true,
       "sortOrder": 180,
-      "customization": { "type": "text", "label": "Pon tu nombre" }
+      "customization": {
+        "type": "text",
+        "label": "Pon tu nombre"
+      }
     },
     {
       "id": "figuras-sorpresa-2-figuras",
       "name": "Figuras sorpresa (2 figuras)",
       "description": "",
       "price": 15,
-      "images": ["https://i.imgur.com/rcfMcLC.jpeg"],
+      "images": [
+        "https://i.imgur.com/rcfMcLC.jpeg"
+      ],
       "categoryId": "coleccion-figuritas",
       "tags": [],
       "aiHint": "surprise figures",
