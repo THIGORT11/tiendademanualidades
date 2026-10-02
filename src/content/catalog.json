@@ -36,6 +36,12 @@
       "name": "Colección figuritas",
       "active": true,
       "sortOrder": 60
+    },
+    {
+      "id": "halloween",
+      "name": "Halloween ",
+      "active": true,
+      "sortOrder": 70
     }
   ],
   "products": [
@@ -375,6 +381,60 @@
       "featured": false,
       "active": true,
       "sortOrder": 190
+    },
+    {
+      "id": "1",
+      "name": "Lote 3 de dibujos halloween ",
+      "description": "Un lote de 2u dibujos para decorar tu casa de halloween ",
+      "price": 1.1,
+      "images": [
+        "https://i.imgur.com/fyfD8pQ.jpeg"
+      ],
+      "categoryId": "halloween",
+      "tags": [
+        "nuevo"
+      ],
+      "aiHint": "",
+      "availability": "available",
+      "featured": false,
+      "active": true,
+      "sortOrder": 200
+    },
+    {
+      "id": "2",
+      "name": "Lote 2 de dibujos halloween ",
+      "description": "Un lote de 2u dibujos para decorar tu casa de halloween ",
+      "price": 1.1,
+      "images": [
+        "https://i.imgur.com/3kMDthE.jpeg"
+      ],
+      "categoryId": "halloween",
+      "tags": [
+        "nuevo"
+      ],
+      "aiHint": "",
+      "availability": "available",
+      "featured": false,
+      "active": true,
+      "sortOrder": 210
+    },
+    {
+      "id": "3",
+      "name": "Lote 1 de dibujos halloween ",
+      "description": "Un lote perfecto para decorar tu casa de halloween ",
+      "price": 1.1,
+      "images": [
+        "https://i.imgur.com/TW505Ob.jpeg"
+      ],
+      "categoryId": "halloween",
+      "tags": [
+        "nuevo"
+      ],
+      "aiHint": "",
+      "availability": "available",
+      "featured": false,
+      "active": true,
+      "sortOrder": 220
     }
   ]
 }
