@@ -435,6 +435,24 @@
       "featured": false,
       "active": true,
       "sortOrder": 220
+    },
+    {
+      "id": "4",
+      "name": "Aquabeads edición halloween ",
+      "description": "Aquabeads a elegir, (EDICIÓNES LIMITADAS)",
+      "price": 12,
+      "images": [
+        "https://i.imgur.com/wYtpTNX.jpeg"
+      ],
+      "categoryId": "halloween",
+      "tags": [
+        "nuevo"
+      ],
+      "aiHint": "",
+      "availability": "available",
+      "featured": false,
+      "active": true,
+      "sortOrder": 230
     }
   ]
 }
