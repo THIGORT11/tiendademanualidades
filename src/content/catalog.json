@@ -453,6 +453,24 @@
       "featured": false,
       "active": true,
       "sortOrder": 230
+    },
+    {
+      "id": "5",
+      "name": "Aquabeads edición supermario ",
+      "description": "",
+      "price": 11.5,
+      "images": [
+        "https://i.imgur.com/aU6HSQg.jpeghttps://i.imgur.com/aU6HSQg.jpeg"
+      ],
+      "categoryId": "seccion-4",
+      "tags": [
+        "nuevo"
+      ],
+      "aiHint": "",
+      "availability": "available",
+      "featured": false,
+      "active": true,
+      "sortOrder": 240
     }
   ]
 }
