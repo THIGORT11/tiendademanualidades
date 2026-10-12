@@ -460,7 +460,7 @@
       "description": "",
       "price": 11.5,
       "images": [
-        "https://i.imgur.com/aU6HSQg.jpeghttps://i.imgur.com/aU6HSQg.jpeg"
+        "https://i.imgur.com/f10pgjh.jpeghttps://i.imgur.com/f10pgjh.jpeg"
       ],
       "categoryId": "seccion-4",
       "tags": [
@@ -470,7 +470,14 @@
       "availability": "available",
       "featured": false,
       "active": true,
-      "sortOrder": 240
+      "sortOrder": 240,
+      "customization": {
+        "type": "number",
+        "label": "Número del diseño que quieres",
+        "min": 1,
+        "max": 8,
+        "helpText": "Es obligatoria la selección del que quieres para poder añadirlo al carrito "
+      }
     }
   ]
 }
